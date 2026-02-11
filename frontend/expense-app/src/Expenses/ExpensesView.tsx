@@ -4,7 +4,7 @@ import ExpensesTable from '../ExpensesTable/ExpensesTable';
 import FilterSection from '../FilterSection/FilterSection';
 import type { DataType, CategoryType } from '../types/expenses';
 import './ExpensesView.scss'
-import { parsedDate } from '../utils/utils';
+import { parsedDate, sanity } from '../utils/utils';
 
 type ExpensesViewProps = {
     data: DataType[],
@@ -15,27 +15,46 @@ const ExpensesView = ({ data, categories }: ExpensesViewProps) => {
 
     const [ category, setCategory ] = useState<string>('All')
     const [ sort, setSort ] = useState<string>('Latest')
+    const [ searchForTitle, setSearchForTitle ] = useState<string>('')
+    const [ searchForDate, setSearchForDate ] = useState<string>('')
 
 
-    const filterByCategory = useMemo(() => {
-        if(category === 'All') {
-            return data
-        }
-        const filteredData : DataType[]= data.filter((el) => el.category === category)
-        return filteredData
-    },[category, data])
+    const filteredData = useMemo(() => {
+        return data
+            .filter((el) => {
+                   if(category === 'All') return true
+                   return el.category === category
+            })
+            .filter((el) => {
+                 if(!searchForTitle) return true
+                 return sanity(el.title).includes(searchForTitle)
+            })
+            .filter((el) => {
+                if(!searchForDate) return true
+                return el.expense_date === searchForDate
+            })
+    }, [data, category, searchForDate, searchForTitle])
+
 
     const sortByOption = useMemo(() => {
-        return [...filterByCategory].sort((a, b) => {
+        return [...filteredData].sort((a, b) => {
             const bdate = parsedDate(b.expense_date)
             const adate = parsedDate(a.expense_date)
 
        if(sort === 'Oldest') {
             return new Date(adate).getTime() - new Date(bdate).getTime()
+        } else if(sort === 'A to Z') {
+            return a.title.localeCompare(b.title)
+        } else if(sort === 'Z to A') {
+             return b.title.localeCompare(a.title)
+        } else if(sort === 'Lowest') {
+            return a.amount - b.amount
+        } else if(sort === 'Highest') {
+            return b.amount - a.amount
         }
         return new Date(bdate).getTime() - new Date(adate).getTime()
     })
-}, [sort, filterByCategory])
+}, [sort, filteredData])
 
 
     return (
@@ -47,8 +66,23 @@ const ExpensesView = ({ data, categories }: ExpensesViewProps) => {
       :
         (
         <div className='expenses-list'>
-          <FilterSection categories={categories} sort={sort} setSort={setSort} setCategory={setCategory} category={category} />
-          <ExpensesTable data={sortByOption} />
+          <FilterSection
+            categories={categories}
+            sort={sort}
+            setSort={setSort}
+            setCategory={setCategory}
+            category={category}
+            searchForTitle={searchForTitle}
+            setSearchForTitle={setSearchForTitle}
+            searchForDate={searchForDate}
+            setSearchForDate={setSearchForDate}
+            />
+            {
+                sortByOption.length ?
+                <ExpensesTable data={sortByOption} />
+                :
+                <p className='filter-notfound'>Not found</p>
+            }
         </div>
         )
     }
