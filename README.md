@@ -10,8 +10,13 @@ Simple full-stack expense tracking app
 
 ## Features
 
-- Add daily expenses
-- List expenses sorted by date
+- List all expenses
+- Add daily expenses IN PROGRESS
+- Filter by category
+- Search by title
+- Search by exact date
+- Sort by latest/oldest/highest/lowest/A-Z/Z-A
+- Reset active filters
 - ...
 
 # How to run locally
@@ -22,4 +27,7 @@ python -m venv venv
 source venv/Scripts/activate
 pip install -r requirements.txt
 uvicorn main:app --port 8000
+
+cd frontend/expense-app
+npm run dev
 ```
