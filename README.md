@@ -4,6 +4,8 @@ Simple full-stack expense tracking app
 
 ![main view of expense tracking app](image.png)
 
+![view of modal](image-1.png)
+
 ## Tech stack
 
 - FRONTEND: React + Vite + TypeScript
