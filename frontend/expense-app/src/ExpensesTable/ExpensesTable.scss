@@ -1,0 +1,25 @@
+
+
+.expenses-table {
+    width: 100%;
+ border-collapse: collapse;
+ border-radius: 8px;
+}
+
+.expenses-table th,
+.expenses-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(36, 36, 36, 0.37);
+}
+
+.expenses-table th {
+    font-weight: 600;
+}
+
+.expenses-table tr {
+    &:last-child td {
+        border-bottom: none;
+    }
+}
+

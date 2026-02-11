@@ -1,0 +1,22 @@
+.filter-section {
+display: flex;
+gap: 16px;
+padding: 24px 12px;
+justify-content: flex-end;
+}
+
+.filter-section select {
+padding: 8px 8px 8px 4px;
+border: 1px solid rgba(36, 36, 36, 0.37);
+border-radius: 4px;
+background-color: #fff;
+margin-left: 16px;
+}
+
+.filter-select{
+    min-width: 200px;
+}
+
+.filter-sort {
+    min-width: 100px;
+}

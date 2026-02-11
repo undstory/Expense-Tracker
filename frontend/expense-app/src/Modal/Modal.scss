@@ -1,0 +1,48 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-wrapper {
+    background-color: rgba(255, 255, 255);
+    color: #242424;
+    padding: 32px;
+    border-radius: 8px;
+    width: 460px;
+    max-width: 90vw;
+}
+
+.modal-header {
+    margin:0 0 16px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 24px;
+    :last-child {
+        background: rgba(0,0,0,0.7);
+    }
+}
+
+.modal-form input, .modal-form select {
+    padding: 8px;
+    margin: 12px;
+}
+
+.modal-button {
+  background-color: #242424;
+   color: rgba(255, 255, 255);
+   min-width: 150px;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
-type DataType = {
-  id: number,
-  title: string,
-  amount: number,
-  category: string,
-  expense_date: string
-}
+import type { DataType } from './types/expenses';
+import Modal from './Modal/Modal';
+import ExpensesView from './Expenses/ExpensesView';
+
 
 function App() {
   const [ data, setData ] = useState<DataType[]>([])
+  const [ isModalOpened, setIsModalOpened ] = useState(false)
+
   useEffect(()  => {
     const getExpenses = async () => {
       try {
@@ -27,17 +26,25 @@ function App() {
     getExpenses()
   }, [])
 
+ const categories = [...new Set(data.map(el => el.category))]
+
+
+
   return (
   <>
-  <div>
+  <div className='page-wrapper'>
+    <div className='page-left'>
     <h2>Expenses</h2>
-    {data.map((el) => {
-      return (
-        <div>
-          {el.title}
-        </div>
-      )
-    })}
+    <button className='expenses-button' onClick={() => setIsModalOpened(true)}>Add expenses</button>
+    </div>
+    <ExpensesView data={data} categories={categories}/>
+
+    { isModalOpened
+      ?
+      <Modal categories={categories} setIsModalOpened={setIsModalOpened} />
+      :
+      null
+    }
   </div>
   </>
   )
