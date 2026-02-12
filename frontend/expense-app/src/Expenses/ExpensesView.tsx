@@ -4,7 +4,7 @@ import ExpensesTable from '../ExpensesTable/ExpensesTable';
 import FilterSection from '../FilterSection/FilterSection';
 import type { DataType, CategoryType } from '../types/expenses';
 import './ExpensesView.scss'
-import { parsedDate, sanity } from '../utils/utils';
+import { sanity } from '../utils/utils';
 
 type ExpensesViewProps = {
     data: DataType[],
@@ -38,8 +38,8 @@ const ExpensesView = ({ data, categories }: ExpensesViewProps) => {
 
     const sortByOption = useMemo(() => {
         return [...filteredData].sort((a, b) => {
-            const bdate = parsedDate(b.expense_date)
-            const adate = parsedDate(a.expense_date)
+            const bdate = new Date(b.expense_date).getTime()
+            const adate = new Date(a.expense_date).getTime()
 
        if(sort === 'Oldest') {
             return new Date(adate).getTime() - new Date(bdate).getTime()

@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from db import get_connection
 from schemas import ExpenseCreate
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager, contextmanager
 
-app = FastAPI(title="Daily Expense Tracker API")
 
 # Add CORS middleware
 app.add_middleware(
@@ -13,6 +13,34 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
 )
+
+def create_tables():
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="password",
+        database="expense_tracker"
+    )
+    cursor = connection.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS expenses (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            amount DECIMAL(10, 2) NOT NULL,
+            category VARCHAR(50) NOT NULL,
+            expense_date DATE NOT NULL
+        )
+    """)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
+
+app = FastAPI(lifespan=lifespan,title="Daily Expense Tracker API")
 
 @app.get("/expenses")
 def get_expenses():

@@ -28,6 +28,9 @@ function App() {
 
  const categories = [...new Set(data.map(el => el.category))]
 
+ const handleAddExpense = (newExpense: DataType) => {
+  setData((prev) => [newExpense, ...prev])
+ }
 
 
   return (
@@ -41,7 +44,7 @@ function App() {
 
     { isModalOpened
       ?
-      <Modal categories={categories} setIsModalOpened={setIsModalOpened} />
+      <Modal onSuccess={handleAddExpense} categories={categories} setIsModalOpened={setIsModalOpened} />
       :
       null
     }

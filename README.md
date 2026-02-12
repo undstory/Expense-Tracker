@@ -16,14 +16,20 @@ Simple full-stack expense tracking app
 
 - List all expenses
 - Add daily expenses IN PROGRESS
-- Filter by category
-- Search by title
-- Search by exact date
-- Sort by latest/oldest/highest/lowest/A-Z/Z-A
+- Combined filtering (category + title + date)
+- Client-side sorting with memoized data processing
 - Reset active filters
 - ...
 
+# API Documentation
+
+Interactive API documentation is available at: http://localhost:8000/docs (Swagger UI)
+
 # How to run locally
+
+1. Clone repository
+
+2. Backend setup
 
 ```bash
 cd backend
@@ -31,7 +37,14 @@ python -m venv venv
 source venv/Scripts/activate
 pip install -r requirements.txt
 uvicorn main:app --port 8000
+```
 
+3. Frontend setup
+
+```bash
 cd frontend/expense-app
+npm install
 npm run dev
 ```
+
+Frontend runs on: http://localhost:5173
