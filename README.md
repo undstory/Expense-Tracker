@@ -27,7 +27,7 @@ Simple full-stack expense tracking app
 - Reset active filters
 - ...
 
-### Planned
+## Planned
 
 - Edit expense
 - Pagination
@@ -36,11 +36,11 @@ Simple full-stack expense tracking app
 - BE-side validation
 - Api Errors handling
 
-# API Documentation
+## API Documentation
 
 Interactive API documentation is available at: http://localhost:8000/docs (Swagger UI)
 
-# API Endpoints
+## API Endpoints
 
 ```md
 | Method | Endpoint       | Description          |
@@ -50,7 +50,7 @@ Interactive API documentation is available at: http://localhost:8000/docs (Swagg
 | DELETE | /expenses/{id} | delete expense by id |
 ```
 
-# How to run locally
+## How to run locally
 
 1. Clone repository
 
@@ -71,5 +71,3 @@ cd frontend/expense-app
 npm install
 npm run dev
 ```
-
-Frontend runs on: http://localhost:5173
