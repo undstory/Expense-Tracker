@@ -41,9 +41,13 @@ Interactive API documentation is available at: http://localhost:8000/docs (Swagg
 
 # API Endpoints
 
-GET /expenses - fetch all expenses
-POST /expenses - add new expense
-DELETE /expenses/{id} - delete expense by id
+```md
+| Method | Endpoint       | Description          |
+| ------ | -------------- | -------------------- |
+| GET    | /expenses      | fetch all expenses   |
+| POST   | /expenses      | add new expense      |
+| DELETE | /expenses/{id} | delete expense by id |
+```
 
 # How to run locally
 
