@@ -27,13 +27,14 @@ Simple full-stack expense tracking app
 - Reset active filters
 - ...
 
-- Planned:
-  - Edit expense
-  - Pagination
-  - Success feedback alert
-  - Tests
-  - BE-side validation
-  - Api Errors handling
+## Planned:
+
+- Edit expense
+- Pagination
+- Success feedback alert
+- Tests
+- BE-side validation
+- Api Errors handling
 
 # API Documentation
 
