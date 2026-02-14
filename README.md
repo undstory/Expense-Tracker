@@ -27,7 +27,7 @@ Simple full-stack expense tracking app
 - Reset active filters
 - ...
 
-## Planned:
+### Planned
 
 - Edit expense
 - Pagination
