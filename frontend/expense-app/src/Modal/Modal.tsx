@@ -1,10 +1,10 @@
-import type { CategoryType, DataType } from '../types/expenses';
+import type { CategoryType } from '../types/expenses';
 import './Modal.scss'
 
 type ModalProps = {
     categories: CategoryType,
     setIsModalOpened: React.Dispatch<React.SetStateAction<boolean>>
-    onSuccess: (newExpense: DataType) => void
+    onSuccess: () => void
 }
 const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
 
@@ -23,16 +23,16 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
         expense_date: formData.get('date')
     }
         try {
-            const res = await fetch('http://127.0.0.1:8000/expenses', {
+             await fetch('http://127.0.0.1:8000/expenses', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             })
-            const data = await res.json()
-            onSuccess(data)
+            await onSuccess()
             setIsModalOpened(false)
+
         } catch (e: unknown) {
             console.log(e)
         }
@@ -45,7 +45,7 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
             <form className='modal-form' onSubmit={handleSubmit}>
 
                 <label htmlFor="Title">Title</label>
-                <input placeholder="Title" name="title" type="text" />
+                <input name="title" type="text" />
                 <label htmlFor="Category">Category</label>
                 <select name="category">
                     <option>Other</option>

@@ -3,8 +3,14 @@ from db import get_connection
 from schemas import ExpenseCreate
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager, contextmanager
+import mysql.connector
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
 
+app = FastAPI(lifespan=lifespan,title="Daily Expense Tracker API")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -15,12 +21,16 @@ app.add_middleware(
 )
 
 def create_tables():
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="password",
-        database="expense_tracker"
-    )
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="password",
+            database="expense_tracker"
+        )
+    except mysql.connector.Error as err:
+        print(f"Error connecting to database: {err}")
+        return
     cursor = connection.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS expenses (
@@ -35,12 +45,9 @@ def create_tables():
     cursor.close()
     connection.close()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    create_tables()
-    yield
 
-app = FastAPI(lifespan=lifespan,title="Daily Expense Tracker API")
+
+
 
 @app.get("/expenses")
 def get_expenses():
@@ -56,10 +63,10 @@ def get_expenses():
 def create_expenses(expense: ExpenseCreate):
     db = get_connection()
     cursor = db.cursor()
-    query="""INSERT INTO expenses (title, amount, category, expense_date) VALUES (%s, %s, %s, %s)"""
+    query="""INSERT INTO expenses (title, category, amount, expense_date) VALUES (%s, %s, %s, %s)"""
     cursor.execute(
         query,
-        (expense.title, expense.amount, expense.category, expense.expense_date)
+        (expense.title, expense.category, expense.amount, expense.expense_date)
     )
     db.commit()
     cursor.close()

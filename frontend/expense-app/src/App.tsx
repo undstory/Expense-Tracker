@@ -10,7 +10,6 @@ function App() {
   const [ data, setData ] = useState<DataType[]>([])
   const [ isModalOpened, setIsModalOpened ] = useState(false)
 
-  useEffect(()  => {
     const getExpenses = async () => {
       try {
         const response = await fetch('http://127.0.0.1:8000/expenses')
@@ -23,15 +22,15 @@ function App() {
       }
     }
 
+  useEffect(()  => {
     getExpenses()
   }, [])
 
  const categories = [...new Set(data.map(el => el.category))]
 
- const handleAddExpense = (newExpense: DataType) => {
-  setData((prev) => [newExpense, ...prev])
+ const refreshExpenses = async () => {
+  await getExpenses()
  }
-
 
   return (
   <>
@@ -44,7 +43,7 @@ function App() {
 
     { isModalOpened
       ?
-      <Modal onSuccess={handleAddExpense} categories={categories} setIsModalOpened={setIsModalOpened} />
+      <Modal onSuccess={refreshExpenses} categories={categories} setIsModalOpened={setIsModalOpened} />
       :
       null
     }
