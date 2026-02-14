@@ -32,6 +32,18 @@ function App() {
   await getExpenses()
  }
 
+   const handleRemove = async (item: number) => {
+    try {
+      await fetch(`http://127.0.0.1:8000/expenses/${item}`, {
+        method: 'DELETE',
+      })
+      await getExpenses()
+    }
+    catch(e) {
+      console.log(e);
+    }
+  }
+
   return (
   <>
   <div className='page-wrapper'>
@@ -39,7 +51,7 @@ function App() {
     <h2>Expenses</h2>
     <button className='expenses-button' onClick={() => setIsModalOpened(true)}>Add expenses</button>
     </div>
-    <ExpensesView data={data} categories={categories}/>
+    <ExpensesView data={data} onRemove={handleRemove} categories={categories}/>
 
     { isModalOpened
       ?

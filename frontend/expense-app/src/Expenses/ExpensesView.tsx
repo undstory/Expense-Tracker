@@ -8,10 +8,11 @@ import { sanity } from '../utils/utils';
 
 type ExpensesViewProps = {
     data: DataType[],
-    categories: CategoryType
+    categories: CategoryType,
+    onRemove: (id: number) => void
 }
 
-const ExpensesView = ({ data, categories }: ExpensesViewProps) => {
+const ExpensesView = ({ data, categories, onRemove }: ExpensesViewProps) => {
 
     const [ category, setCategory ] = useState<string>('All')
     const [ sort, setSort ] = useState<string>('Latest')
@@ -79,7 +80,7 @@ const ExpensesView = ({ data, categories }: ExpensesViewProps) => {
             />
             {
                 sortByOption.length ?
-                <ExpensesTable data={sortByOption} />
+                <ExpensesTable data={sortByOption} onRemove={onRemove}/>
                 :
                 <p className='filter-notfound'>Not found</p>
             }

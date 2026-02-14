@@ -14,7 +14,7 @@ app = FastAPI(lifespan=lifespan,title="Daily Expense Tracker API")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Allow all origins (you can be more specific in production)
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],  # Allow all origins (you can be more specific in production)
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
@@ -74,12 +74,17 @@ def create_expenses(expense: ExpenseCreate):
 
     return {"message": "Expense added"}
 
-@app.get("/health")
-def health():
+@app.delete("/expenses/{id}")
+def remove_expense(id: int):
     db = get_connection()
     cursor = db.cursor()
-    cursor.execute("SELECT 1")
-    cursor.fetchone()
+    query ="""DELETE FROM expenses WHERE ID=(%s)"""
+    cursor.execute(
+        query,
+        (id,)
+    )
+    db.commit()
     cursor.close()
     db.close()
-    return {"status": "ok"}
+
+    return { "message": "Expense removed"}

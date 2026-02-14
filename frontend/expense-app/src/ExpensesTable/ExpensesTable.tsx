@@ -2,9 +2,15 @@
 import type { DataType } from '../types/expenses';
 import './ExpensesTable.scss'
 
+type ExpensesTableProps = {
+  data: DataType[],
+  onRemove: (id: number) => void
+}
 
 
-const ExpensesTable = ({ data }: { data: DataType[] }) => {
+const ExpensesTable = ({ data, onRemove }: ExpensesTableProps) => {
+
+
 
   return (
 
@@ -15,6 +21,7 @@ const ExpensesTable = ({ data }: { data: DataType[] }) => {
           <th>Amount</th>
           <th>Category</th>
           <th>Expense Date</th>
+          <th>Delete expense</th>
         </tr>
       </thead>
       <tbody>
@@ -25,6 +32,7 @@ const ExpensesTable = ({ data }: { data: DataType[] }) => {
               <td>{el.amount.toFixed(2)}</td>
               <td>{el.category}</td>
               <td>{new Date(el.expense_date).toLocaleDateString()}</td>
+              <td><button className="table-removebtn" onClick={() => onRemove(el.id)}>Delete</button></td>
             </tr>
           )
         })}
