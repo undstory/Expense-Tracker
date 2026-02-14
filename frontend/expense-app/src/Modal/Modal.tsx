@@ -19,8 +19,8 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
         const form = e.currentTarget
         const formData = new FormData(form)
 
-        const title = formData.get('title')?.toString().trim()
-        const category = formData.get('category')?.toString().trim()
+        const title = formData.get('title')?.toString().toLowerCase().trim()
+        const category = formData.get('category')?.toString().toLowerCase().trim()
         const amountRaw = formData.get('amount')?.toString()
         const expense = formData.get('date')?.toString()
 
