@@ -15,15 +15,35 @@ Simple full-stack expense tracking app
 ## Features
 
 - List all expenses
-- Add daily expenses IN PROGRESS
+- Add daily expenses
+- Delete expense
+- Client-side form validation:
+  - required fields
+  - positive amount validation
+  - no future dates allowed
+  - title validation (letters only)
 - Combined filtering (category + title + date)
 - Client-side sorting with memoized data processing
 - Reset active filters
 - ...
 
+- Planned:
+  - Edit expense
+  - Pagination
+  - Success feedback alert
+  - Tests
+  - BE-side validation
+  - Api Errors handling
+
 # API Documentation
 
 Interactive API documentation is available at: http://localhost:8000/docs (Swagger UI)
+
+# API Endpoints
+
+GET /expenses - fetch all expenses
+POST /expenses - add new expense
+DELETE /expenses/{id} - delete expense by id
 
 # How to run locally
 
