@@ -49,7 +49,7 @@ const Modal = ({ categories, setIsModalOpened, onSuccess, setIsPopupOpened, setP
 
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/expense', {
+            const response = await fetch('http://127.0.0.1:8000/expenses', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
