@@ -25,16 +25,15 @@ Simple full-stack expense tracking app
 - Combined filtering (category + title + date)
 - Client-side sorting with memoized data processing
 - Reset active filters
+- Success and error feedback alert
+- Basic Api Errors handling
 - ...
 
 ## Planned
 
-- Edit expense
 - Pagination
-- Success feedback alert
 - Tests
 - BE-side validation
-- Api Errors handling
 
 ## API Documentation
 

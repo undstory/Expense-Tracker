@@ -1,17 +1,17 @@
 import './Popup.scss'
 
 type PopupProps = {
-    activity: string,
-    setPopup: React.Dispatch<React.SetStateAction<string | null>>
+    popupMessage: string,
+    setIsPopupOpened: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Popup = ({ activity, setPopup }: PopupProps) => {
+const Popup = ({ popupMessage, setIsPopupOpened }: PopupProps) => {
     return (
         <div className="popup-overlay">
             <div className="popup-wrapper">
                 <h2 className='popup-header'>Message</h2>
-                <p>Expense {activity} successfully</p>
-                <button className="popup-button" onClick={() => setPopup(null)}>Close</button>
+                <p>{popupMessage}</p>
+                <button className="popup-button" onClick={() => setIsPopupOpened(false)}>Close</button>
             </div>
         </div>
     )

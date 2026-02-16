@@ -10,7 +10,8 @@ import Popup from './Popup/Popup';
 function App() {
   const [ data, setData ] = useState<DataType[]>([])
   const [ isModalOpened, setIsModalOpened ] = useState(false)
-  const [ popup, setPopup ] = useState<string | null>(null)
+  const [ isPopupOpened, setIsPopupOpened ] = useState(false)
+  const [ popupMessage, setPopupMessage ] = useState<string>('')
 
     const getExpenses = async () => {
       try {
@@ -21,6 +22,8 @@ function App() {
 
       } catch (e: unknown) {
         console.log(e)
+        setIsPopupOpened(true)
+        setPopupMessage("Something went wrong")
       }
     }
 
@@ -32,19 +35,24 @@ function App() {
 
  const refreshExpenses = async () => {
   await getExpenses()
-  setPopup("added")
+  setIsPopupOpened(true)
+  setPopupMessage("Expense added successfully")
  }
 
    const handleRemove = async (item: number) => {
     try {
-      await fetch(`http://127.0.0.1:8000/expenses/${item}`, {
+      const response = await fetch(`http://127.0.0.1:8000/expenses/${item}`, {
         method: 'DELETE',
       })
+       if(!response.ok) throw new Error('Api error')
       await getExpenses()
-      setPopup("removed")
+      setIsPopupOpened(true)
+      setPopupMessage("Expense removed successfully")
     }
     catch(e) {
       console.log(e);
+      setIsPopupOpened(true)
+      setPopupMessage("Something went wrong")
     }
   }
 
@@ -59,11 +67,11 @@ function App() {
 
     { isModalOpened
       ?
-      <Modal onSuccess={refreshExpenses} categories={categories} setIsModalOpened={setIsModalOpened} />
+      <Modal setPopupMessage={setPopupMessage} setIsPopupOpened={setIsPopupOpened} onSuccess={refreshExpenses} categories={categories} setIsModalOpened={setIsModalOpened} />
       :
       null
     }
-    { popup === "removed" || popup === "added" ? <Popup setPopup={setPopup} activity={popup} /> : null }
+    { isPopupOpened ? <Popup setIsPopupOpened={setIsPopupOpened} popupMessage={popupMessage} /> : null }
   </div>
   </>
   )

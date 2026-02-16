@@ -6,8 +6,10 @@ type ModalProps = {
     categories: CategoryType,
     setIsModalOpened: React.Dispatch<React.SetStateAction<boolean>>
     onSuccess: () => void
+    setPopupMessage: React.Dispatch<React.SetStateAction<string>>
+    setIsPopupOpened: React.Dispatch<React.SetStateAction<boolean>>
 }
-const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
+const Modal = ({ categories, setIsModalOpened, onSuccess, setIsPopupOpened, setPopupMessage } : ModalProps) => {
 
     const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
     const [ selectedCategory, setSelectedCategory ] = useState<string>('')
@@ -47,18 +49,22 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
 
 
         try {
-             await fetch('http://127.0.0.1:8000/expenses', {
+            const response = await fetch('http://127.0.0.1:8000/expense', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             })
-            await onSuccess()
+            if(!response.ok) throw new Error('Api error')
+            onSuccess()
             setIsModalOpened(false)
 
         } catch (e: unknown) {
             console.log(e)
+            setIsModalOpened(false)
+            setIsPopupOpened(true)
+            setPopupMessage("Something went wrong")
         }
     }
 
