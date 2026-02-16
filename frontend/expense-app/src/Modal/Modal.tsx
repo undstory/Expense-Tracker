@@ -99,10 +99,10 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
                 <input type="number" name="amount"  onChange={handleCorrectAmount} min="0.01" step="0.01"/>
                 <label htmlFor="Date">Date</label>
                 <input type="date" name="date" onChange={handleCorrectDate} />
+                { errorMessage ? <p className='modal-errormessage'>{errorMessage}</p> : null }
                 <div className='modal-buttons'>
-            { errorMessage ? <p>{errorMessage}</p> : null }
-            <button className='modal-button' type="submit">Add expense</button>
-            <button className='modal-button' onClick={() => setIsModalOpened(false)}>Cancel</button>
+                    <button className='modal-button' type="submit">Add expense</button>
+                    <button className='modal-button' onClick={() => setIsModalOpened(false)}>Cancel</button>
                 </div>
             </form>
         </div>

@@ -4,11 +4,13 @@ import './App.css'
 import type { DataType } from './types/expenses';
 import Modal from './Modal/Modal';
 import ExpensesView from './Expenses/ExpensesView';
+import Popup from './Popup/Popup';
 
 
 function App() {
   const [ data, setData ] = useState<DataType[]>([])
   const [ isModalOpened, setIsModalOpened ] = useState(false)
+  const [ popup, setPopup ] = useState<string | null>(null)
 
     const getExpenses = async () => {
       try {
@@ -30,6 +32,7 @@ function App() {
 
  const refreshExpenses = async () => {
   await getExpenses()
+  setPopup("added")
  }
 
    const handleRemove = async (item: number) => {
@@ -38,6 +41,7 @@ function App() {
         method: 'DELETE',
       })
       await getExpenses()
+      setPopup("removed")
     }
     catch(e) {
       console.log(e);
@@ -59,6 +63,7 @@ function App() {
       :
       null
     }
+    { popup === "removed" || popup === "added" ? <Popup setPopup={setPopup} activity={popup} /> : null }
   </div>
   </>
   )
