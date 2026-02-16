@@ -7,3 +7,14 @@ export type DataType = {
 };
 
 export type CategoryType = string[];
+
+export type ErrorType = {
+  detail: ErrorDetailType[];
+};
+
+export type ErrorDetailType = {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+  input: string;
+};

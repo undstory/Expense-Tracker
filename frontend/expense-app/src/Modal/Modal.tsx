@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CategoryType } from '../types/expenses';
+import type { CategoryType, ErrorDetailType } from '../types/expenses';
 import './Modal.scss'
 
 type ModalProps = {
@@ -47,8 +47,6 @@ const Modal = ({ categories, setIsModalOpened, onSuccess, setIsPopupOpened, setP
         expense_date: expense
     }
 
-
-        try {
             const response = await fetch('http://127.0.0.1:8000/expenses', {
                 method: 'POST',
                 headers: {
@@ -56,16 +54,25 @@ const Modal = ({ categories, setIsModalOpened, onSuccess, setIsPopupOpened, setP
                 },
                 body: JSON.stringify(payload)
             })
-            if(!response.ok) throw new Error('Api error')
+            const data = await response.json()
+            if(!response.ok) {
+                if(response.status === 422) {
+                    console.log(data);
+
+                    const errors = data.detail as ErrorDetailType[]
+                    const message = errors.map(err => `${err.msg}`)
+                    .join(', ')
+
+                    setErrorMessage(message)
+                    return
+                }
+                setIsModalOpened(false)
+                setIsPopupOpened(true)
+                setPopupMessage("Something went wrong")
+                return
+            }
             onSuccess()
             setIsModalOpened(false)
-
-        } catch (e: unknown) {
-            console.log(e)
-            setIsModalOpened(false)
-            setIsPopupOpened(true)
-            setPopupMessage("Something went wrong")
-        }
     }
 
     const handleCorrectTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +110,7 @@ const Modal = ({ categories, setIsModalOpened, onSuccess, setIsPopupOpened, setP
                 <label htmlFor="Title">Title</label>
                 <input name="title" type="text" onChange={handleCorrectTitle} />
                 <label htmlFor="Category">Category</label>
-                <select name="category" required value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                <select name="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                     <option value="" disabled>Select category</option>
                     {categories.map(category => (
                         <option key={category} value={category}>{category}</option>
@@ -117,7 +124,7 @@ const Modal = ({ categories, setIsModalOpened, onSuccess, setIsPopupOpened, setP
                     </>
                 ) : null}
                 <label htmlFor="Amount">Amount</label>
-                <input type="number" name="amount"  onChange={handleCorrectAmount} min="0.01" step="0.01"/>
+                <input type="number" name="amount"  onChange={handleCorrectAmount} />
                 <label htmlFor="Date">Date</label>
                 <input type="date" name="date" onChange={handleCorrectDate} />
                 { errorMessage ? <p className='modal-errormessage'>{errorMessage}</p> : null }

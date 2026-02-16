@@ -22,6 +22,10 @@ Simple full-stack expense tracking app
   - positive amount validation
   - no future dates allowed
   - title validation (letters only)
+- BE-side validation:
+  - request body validation with Pydantic
+  - business rules validation (e.g. expense date must be later than year 2000)
+  - HTTP 422 responses for invalid data (title and category min length, positive amount only)
 - Combined filtering (category + title + date)
 - Client-side sorting with memoized data processing
 - Reset active filters
@@ -33,7 +37,6 @@ Simple full-stack expense tracking app
 
 - Pagination
 - Tests
-- BE-side validation
 
 ## API Documentation
 
@@ -52,7 +55,6 @@ Interactive API documentation is available at: http://localhost:8000/docs (Swagg
 ## How to run locally
 
 1. Clone repository
-
 2. Backend setup
 
 ```bash
