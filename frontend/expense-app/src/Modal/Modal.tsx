@@ -10,6 +10,8 @@ type ModalProps = {
 const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
 
     const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
+    const [ selectedCategory, setSelectedCategory ] = useState<string>('')
+    const [ customCategory, setCustomCategory] = useState<string>('')
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -20,9 +22,10 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
         const formData = new FormData(form)
 
         const title = formData.get('title')?.toString().toLowerCase().trim()
-        const category = formData.get('category')?.toString().toLowerCase().trim()
         const amountRaw = formData.get('amount')?.toString()
         const expense = formData.get('date')?.toString()
+
+        const category = selectedCategory === '__ADD_NEW__' ? customCategory.toLowerCase().trim() : selectedCategory.toLowerCase().trim()
 
         if(!title || !category || !amountRaw || !expense) {
             setErrorMessage('All fields are required')
@@ -79,6 +82,11 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
         setErrorMessage('')
     }
 
+    const handleNewCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCustomCategory(e.target.value)
+        setErrorMessage('')
+    }
+
     return (
         <div className='modal-overlay'>
 
@@ -89,12 +97,19 @@ const Modal = ({ categories, setIsModalOpened, onSuccess } : ModalProps) => {
                 <label htmlFor="Title">Title</label>
                 <input name="title" type="text" onChange={handleCorrectTitle} />
                 <label htmlFor="Category">Category</label>
-                <select name="category" required>
-                    <option>Other</option>
+                <select name="category" required value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                    <option value="" disabled>Select category</option>
                     {categories.map(category => (
                         <option key={category} value={category}>{category}</option>
                     ))}
+                    <option value="__ADD_NEW__">Add new category</option>
                 </select>
+                {selectedCategory === "__ADD_NEW__" ? (
+                    <>
+                        <label htmlFor='newCategory'>New category</label>
+                        <input type="text" name="customCategory" value={customCategory} onChange={(e) => handleNewCategory(e) } />
+                    </>
+                ) : null}
                 <label htmlFor="Amount">Amount</label>
                 <input type="number" name="amount"  onChange={handleCorrectAmount} min="0.01" step="0.01"/>
                 <label htmlFor="Date">Date</label>
