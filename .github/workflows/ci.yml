@@ -1,0 +1,54 @@
+name: CI Pipeline (Tests)
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend/expense-app
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v4
+
+      - name: Configure Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.12.0"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Vitest tests
+        run: npx vitest run
+
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v4
+
+      - name: Configure Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.2"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run Pytest tests
+        run: pytest
