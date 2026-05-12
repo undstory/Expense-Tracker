@@ -1,5 +1,7 @@
 # Expense Tracker
 
+[![CI Pipeline](https://github.com/undstory/Expense-Tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/undstory/Expense-Tracker/actions/workflows/ci.yml)
+
 Simple full-stack expense tracking app
 
 ![main view of expense tracking app](image.png)
@@ -11,6 +13,7 @@ Simple full-stack expense tracking app
 - FRONTEND: React + Vite + TypeScript
 - BACKEND: FastAPI (Python)
 - Database: MySQL
+- CI/CD & DevOps: GitHub Actions
 
 ## Features
 
@@ -38,6 +41,8 @@ Simple full-stack expense tracking app
 - Pagination
 
 ## Testing
+
+- **Continuous Integration (CI):** Fully automated testing pipeline using GitHub Actions. Both backend (`pytest`) and frontend (`vitest`) test suites are triggered automatically on every push and pull request to the `master` branch, ensuring continuous code quality.
 
 ### Backend tests
 
