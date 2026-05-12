@@ -39,13 +39,6 @@ Simple full-stack expense tracking app
 
 ## Testing
 
-### 🤖 AI-Assisted Development (GitHub Copilot)
-
-This project was developed with the active assistance of **GitHub Copilot** to speed up development and focus on architecture and business logic:
-
-- **Frontend Development (React/TypeScript):** Copilot was utilized to generate boilerplate code for React components, write complex TypeScript interfaces, and assist in creating optimized data processing functions (like memoized sorting and combined filtering).
-- **Automated Testing (Vitest & Pytest):** AI assistant significantly accelerated the testing phase. Copilot helped generate comprehensive test cases and edge cases for backend schema validation (FastAPI/Pydantic) as well as unit tests for frontend utility functions and React components.
-
 ### Backend tests
 
 - Added pytest coverage for schema validation and FastAPI endpoints
@@ -67,6 +60,13 @@ cd frontend/expense-app
 npm install
 npm test -- --run
 ```
+
+## 🤖 AI-Assisted Development (GitHub Copilot)
+
+This project was developed with the active assistance of **GitHub Copilot** to speed up development and focus on architecture and business logic:
+
+- **Frontend Development (React/TypeScript):** Copilot was utilized to generate boilerplate code for React components, write complex TypeScript interfaces, and assist in creating optimized data processing functions (like memoized sorting and combined filtering).
+- **Automated Testing (Vitest & Pytest):** AI assistant significantly accelerated the testing phase. Copilot helped generate comprehensive test cases and edge cases for backend schema validation (FastAPI/Pydantic) as well as unit tests for frontend utility functions and React components.
 
 ## API Documentation
 
