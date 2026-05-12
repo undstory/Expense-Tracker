@@ -3,7 +3,7 @@ from db import get_connection
 from schemas import ExpenseCreate
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager, contextmanager
-import mysql.connector
+import sqlite3
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -22,19 +22,15 @@ app.add_middleware(
 
 def create_tables():
     try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="password",
-            database="expense_tracker"
-        )
-    except mysql.connector.Error as err:
+        connection = sqlite3.connect("expenses.db", check_same_thread=False)
+        cursor = connection.cursor()
+    except sqlite3.Error as err:
         print(f"Error connecting to database: {err}")
         return
     cursor = connection.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS expenses (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             title VARCHAR(255) NOT NULL,
             amount DECIMAL(10, 2) NOT NULL,
             category VARCHAR(50) NOT NULL,
@@ -52,7 +48,7 @@ def create_tables():
 @app.get("/expenses")
 def get_expenses():
     db = get_connection()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor()
     cursor.execute("SELECT * FROM expenses ORDER BY expense_date DESC")
     data = cursor.fetchall()
     cursor.close()

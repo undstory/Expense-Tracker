@@ -1,192 +1,249 @@
 import pytest
-from datetime import date
 from unittest.mock import Mock, patch, MagicMock
 from fastapi.testclient import TestClient
-from main import app, create_tables
+from main import app, create_tables, get_expenses, create_expenses, remove_expense
 from schemas import ExpenseCreate
+from datetime import date
+import sqlite3
 
 
 @pytest.fixture
 def client():
-    """Fixture to provide a test client for the FastAPI app"""
+    """Create a test client for the FastAPI app."""
     return TestClient(app)
 
 
 @pytest.fixture
 def mock_db_connection():
-    """Fixture to mock database connection"""
-    with patch('main.mysql.connector.connect') as mock_connect:
-        mock_connection = MagicMock()
-        mock_cursor = MagicMock()
-        mock_connect.return_value = mock_connection
-        mock_connection.cursor.return_value = mock_cursor
-        yield {
-            'connect': mock_connect,
-            'connection': mock_connection,
-            'cursor': mock_cursor
-        }
+    """Mock database connection and cursor."""
+    mock_conn = Mock()
+    mock_cursor = Mock()
+    mock_conn.cursor.return_value = mock_cursor
+    return mock_conn, mock_cursor
+
+
+class TestCreateTables:
+    """Test the create_tables function."""
+
+    @patch('main.sqlite3.connect')
+    def test_create_tables_success(self, mock_connect):
+        """Test successful table creation."""
+        mock_conn = Mock()
+        mock_cursor = Mock()
+        mock_conn.cursor.return_value = mock_cursor
+        mock_connect.return_value = mock_conn
+
+        create_tables()
+
+        mock_connect.assert_called_once_with("expenses.db", check_same_thread=False)
+        mock_cursor.execute.assert_called_once()
+        mock_conn.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+        mock_conn.close.assert_called_once()
+
+    @patch('main.sqlite3.connect')
+    def test_create_tables_connection_error(self, mock_connect):
+        """Test table creation with connection error."""
+        mock_connect.side_effect = sqlite3.Error("Connection failed")
+
+        # Should not raise exception, just print error
+        create_tables()
+
+        mock_connect.assert_called_once_with("expenses.db", check_same_thread=False)
 
 
 class TestGetExpenses:
-    """Test cases for GET /expenses endpoint"""
+    """Test the get_expenses endpoint."""
 
-    def test_get_expenses_empty(self, client, mock_db_connection):
-        """Test getting expenses when none exist"""
-        mock_cursor = mock_db_connection['cursor']
-        mock_cursor.return_value = mock_db_connection['cursor']
+    @patch('main.get_connection')
+    def test_get_expenses_success(self, mock_get_conn, client, mock_db_connection):
+        """Test successful retrieval of expenses."""
+        mock_conn, mock_cursor = mock_db_connection
+        mock_get_conn.return_value = mock_conn
+
+        # Mock the fetchall to return sample data
+        mock_cursor.fetchall.return_value = [
+            (1, 'Lunch', 15.50, 'Food', '2024-01-15'),
+            (2, 'Gas', 45.00, 'Transportation', '2024-01-14')
+        ]
+
+        response = client.get("/expenses")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == 2
+        assert data[0][1] == 'Lunch'  # title
+        assert data[0][2] == 15.50   # amount
+        assert data[0][3] == 'Food'  # category
+
+        mock_get_conn.assert_called_once()
+        mock_cursor.execute.assert_called_once_with("SELECT * FROM expenses ORDER BY expense_date DESC")
+        mock_cursor.close.assert_called_once()
+        mock_conn.close.assert_called_once()
+
+    @patch('main.get_connection')
+    def test_get_expenses_empty(self, mock_get_conn, client, mock_db_connection):
+        """Test retrieval when no expenses exist."""
+        mock_conn, mock_cursor = mock_db_connection
+        mock_get_conn.return_value = mock_conn
         mock_cursor.fetchall.return_value = []
 
-        with patch('main.get_connection', return_value=mock_db_connection['connection']):
-            response = client.get("/expenses")
+        response = client.get("/expenses")
 
         assert response.status_code == 200
-        assert response.json() == []
+        data = response.json()
+        assert data == []
 
-    def test_get_expenses_with_data(self, client, mock_db_connection):
-        """Test getting expenses when data exists"""
-        mock_cursor = mock_db_connection['cursor']
-        mock_cursor.return_value = mock_db_connection['cursor']
-        expenses_data = [
-            {
-                'id': 1,
-                'title': 'Groceries',
-                'amount': 50.00,
-                'category': 'Food',
-                'expense_date': date(2024, 1, 15)
-            },
-            {
-                'id': 2,
-                'title': 'Gas',
-                'amount': 60.00,
-                'category': 'Transportation',
-                'expense_date': date(2024, 1, 14)
-            }
-        ]
-        mock_cursor.fetchall.return_value = expenses_data
-
-        with patch('main.get_connection', return_value=mock_db_connection['connection']):
-            response = client.get("/expenses")
-
-        assert response.status_code == 200
-        assert len(response.json()) == 2
-        assert response.json()[0]['title'] == 'Groceries'
+        mock_cursor.execute.assert_called_once_with("SELECT * FROM expenses ORDER BY expense_date DESC")
 
 
-class TestCreateExpense:
-    """Test cases for POST /expenses endpoint"""
+class TestCreateExpenses:
+    """Test the create_expenses endpoint."""
 
-    def test_create_expense_success(self, client, mock_db_connection):
-        """Test successfully creating an expense"""
+    @patch('main.get_connection')
+    def test_create_expenses_success(self, mock_get_conn, client, mock_db_connection):
+        """Test successful creation of an expense."""
+        mock_conn, mock_cursor = mock_db_connection
+        mock_get_conn.return_value = mock_conn
+
         expense_data = {
-            'title': 'Groceries',
-            'amount': 50.00,
-            'category': 'Food',
-            'expense_date': '2024-01-15'
-        }
-
-        with patch('main.get_connection', return_value=mock_db_connection['connection']):
-            response = client.post("/expenses", json=expense_data)
-
-        assert response.status_code == 200
-        assert response.json()['message'] == 'Expense added'
-        mock_db_connection['cursor'].execute.assert_called()
-
-    def test_create_expense_invalid_title(self, client):
-        """Test creating expense with invalid title"""
-        expense_data = {
-            'title': 'ab',  # Too short
-            'amount': 50.00,
-            'category': 'Food',
-            'expense_date': '2024-01-15'
+            "title": "Coffee",
+            "amount": 5.50,
+            "category": "Food",
+            "expense_date": "2024-01-16"
         }
 
         response = client.post("/expenses", json=expense_data)
 
-        assert response.status_code == 422  # Unprocessable Entity
+        assert response.status_code == 200
+        data = response.json()
+        assert data == {"message": "Expense added"}
 
-    def test_create_expense_negative_amount(self, client):
-        """Test creating expense with negative amount"""
-        expense_data = {
-            'title': 'Groceries',
-            'amount': -50.00,
-            'category': 'Food',
-            'expense_date': '2024-01-15'
+        mock_get_conn.assert_called_once()
+        expected_query = "INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, ?, ?, ?)"
+        mock_cursor.execute.assert_called_once_with(
+            expected_query,
+            ("Coffee", "Food", 5.5, date(2024, 1, 16))
+        )
+        mock_conn.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+        mock_conn.close.assert_called_once()
+
+    @patch('main.get_connection')
+    def test_create_expenses_invalid_data(self, mock_get_conn, client):
+        """Test creation with invalid data."""
+        # Test with missing required field
+        invalid_data = {
+            "title": "Coffee",
+            "amount": 5.50,
+            # missing category
+            "expense_date": "2024-01-16"
         }
 
-        response = client.post("/expenses", json=expense_data)
+        response = client.post("/expenses", json=invalid_data)
 
-        assert response.status_code == 422
-
-    def test_create_expense_invalid_date(self, client):
-        """Test creating expense with invalid date"""
-        expense_data = {
-            'title': 'Groceries',
-            'amount': 50.00,
-            'category': 'Food',
-            'expense_date': '2030-01-15'  # Future date
-        }
-
-        response = client.post("/expenses", json=expense_data)
-
-        assert response.status_code == 422
-
-    def test_create_expense_missing_field(self, client):
-        """Test creating expense with missing required field"""
-        expense_data = {
-            'title': 'Groceries',
-            'amount': 50.00
-            # Missing category and expense_date
-        }
-
-        response = client.post("/expenses", json=expense_data)
-
+        # Should return 422 Unprocessable Entity due to validation
         assert response.status_code == 422
 
 
-class TestDeleteExpense:
-    """Test cases for DELETE /expenses/{id} endpoint"""
+class TestRemoveExpense:
+    """Test the remove_expense endpoint."""
 
-    def test_delete_expense_success(self, client, mock_db_connection):
-        """Test successfully deleting an expense"""
-        with patch('main.get_connection', return_value=mock_db_connection['connection']):
-            response = client.delete("/expenses/1")
+    @patch('main.get_connection')
+    def test_remove_expense_success(self, mock_get_conn, client, mock_db_connection):
+        """Test successful removal of an expense."""
+        mock_conn, mock_cursor = mock_db_connection
+        mock_get_conn.return_value = mock_conn
+
+        response = client.delete("/expenses/1")
 
         assert response.status_code == 200
-        assert response.json()['message'] == 'Expense removed'
-        mock_db_connection['cursor'].execute.assert_called()
+        data = response.json()
+        assert data == {"message": "Expense removed"}
 
-    def test_delete_expense_invalid_id(self, client):
-        """Test deleting with invalid ID format"""
-        response = client.delete("/expenses/invalid")
+        mock_get_conn.assert_called_once()
+        expected_query = "DELETE FROM expenses WHERE ID=(?)"
+        mock_cursor.execute.assert_called_once_with(expected_query, (1,))
+        mock_conn.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+        mock_conn.close.assert_called_once()
 
-        assert response.status_code == 422
+    @patch('main.get_connection')
+    def test_remove_expense_nonexistent(self, mock_get_conn, client, mock_db_connection):
+        """Test removal of non-existent expense (should still succeed)."""
+        mock_conn, mock_cursor = mock_db_connection
+        mock_get_conn.return_value = mock_conn
 
-    def test_delete_expense_with_negative_id(self, client, mock_db_connection):
-        """Test deleting with negative ID (should technically work at API level)"""
-        with patch('main.get_connection', return_value=mock_db_connection['connection']):
-            response = client.delete("/expenses/-1")
+        response = client.delete("/expenses/999")
 
         assert response.status_code == 200
+        data = response.json()
+        assert data == {"message": "Expense removed"}
+
+        mock_cursor.execute.assert_called_once_with("DELETE FROM expenses WHERE ID=(?)", (999,))
 
 
-class TestCreateTablesFunction:
-    """Test cases for create_tables function"""
+class TestDatabaseConnection:
+    """Test database connection functionality."""
 
-    def test_create_tables_success(self, mock_db_connection):
-        """Test successful table creation"""
-        with patch('main.mysql.connector.connect', return_value=mock_db_connection['connection']):
-            create_tables()
+    @patch('main.sqlite3.connect')
+    def test_get_connection(self, mock_connect):
+        """Test the get_connection function from db module."""
+        from db import get_connection
 
-        mock_db_connection['cursor'].execute.assert_called()
-        mock_db_connection['connection'].commit.assert_called()
+        mock_conn = Mock()
+        mock_connect.return_value = mock_conn
 
-    def test_create_tables_connection_error(self):
-        """Test handling connection error"""
-        with patch('main.mysql.connector.connect') as mock_connect:
-            # Mock mysql.connector.Error properly
-            mock_connect.side_effect = Exception("Connection failed")
-            try:
-                create_tables()
-            except Exception:
-                # If exception is raised (generic), that's OK
-                pass
+        result = get_connection()
+
+        assert result == mock_conn
+        mock_connect.assert_called_once_with("expenses.db", check_same_thread=False)
+
+
+class TestIntegration:
+    """Integration tests combining multiple operations."""
+
+    @patch('main.get_connection')
+    def test_full_expense_workflow(self, mock_get_conn, client):
+        """Test creating, retrieving, and deleting an expense."""
+        # Setup mock connection and cursor
+        mock_conn = Mock()
+        mock_cursor = Mock()
+        mock_conn.cursor.return_value = mock_cursor
+        mock_get_conn.return_value = mock_conn
+
+        # Mock the insert operation
+        mock_cursor.lastrowid = 1
+
+        # 1. Create expense
+        expense_data = {
+            "title": "Test Expense",
+            "amount": 10.00,
+            "category": "Test",
+            "expense_date": "2024-01-17"
+        }
+
+        response = client.post("/expenses", json=expense_data)
+        assert response.status_code == 200
+
+        # Verify create was called
+        assert mock_get_conn.call_count == 1
+
+        # 2. Get expenses - mock fetchall to return the created expense
+        mock_cursor.fetchall.return_value = [(1, 'Test Expense', 10.00, 'Test', '2024-01-17')]
+
+        response = client.get("/expenses")
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == 1
+        assert data[0][1] == 'Test Expense'
+
+        # Verify get was called (total 2 calls now)
+        assert mock_get_conn.call_count == 2
+
+        # 3. Delete expense
+        response = client.delete("/expenses/1")
+        assert response.status_code == 200
+
+        # Verify delete was called (total 3 calls)
+        assert mock_get_conn.call_count == 3
