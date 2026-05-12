@@ -10,10 +10,11 @@ Simple full-stack expense tracking app
 
 ## Tech stack
 
-- FRONTEND: React + Vite + TypeScript
-- BACKEND: FastAPI (Python)
-- Database: SQLite
-- CI/CD & DevOps: GitHub Actions
+- **FRONTEND:** React + Vite + TypeScript + SCSS
+- **BACKEND:** FastAPI (Python) + Pydantic
+- **DATABASE:** SQLite (file-based, no setup required)
+- **TESTING:** pytest (backend) + Vitest (frontend)
+- **CI/CD & DevOps:** GitHub Actions
 
 ## Features
 
@@ -46,7 +47,9 @@ Simple full-stack expense tracking app
 
 ### Backend tests
 
-- Added pytest coverage for schema validation and FastAPI endpoints
+- Added comprehensive pytest coverage for FastAPI endpoints and database functions with SQLite mocking
+- Tests cover all CRUD operations (Create, Read, Delete) with proper mocking of sqlite3 connections
+- Includes integration tests combining multiple operations and error handling tests
 - Run:
 
 ```bash
@@ -65,6 +68,8 @@ cd frontend/expense-app
 npm install
 npm test -- --run
 ```
+
+📖 **Detailed Testing Guide:** See [TESTING.md](TESTING.md) for comprehensive testing instructions, coverage details, and advanced testing options.
 
 ## AI-Assisted Development (GitHub Copilot)
 
@@ -89,21 +94,35 @@ Interactive API documentation is available at: http://localhost:8000/docs (Swagg
 
 ## How to run locally
 
-1. Clone repository
-2. Backend setup
+1. **Clone repository**
 
-```bash
-cd backend
-python -m venv venv
-source venv/Scripts/activate
-pip install -r requirements.txt
-uvicorn main:app --port 8000
-```
+   ```bash
+   git clone <repository-url>
+   cd expense-tracker
+   ```
 
-3. Frontend setup
+2. **Backend setup**
 
-```bash
-cd frontend/expense-app
-npm install
-npm run dev
-```
+   ```bash
+   cd backend
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+   pip install -r requirements.txt
+   uvicorn main:app --port 8000
+   ```
+
+3. **Frontend setup** (in a new terminal)
+
+   ```bash
+   cd frontend/expense-app
+   npm install
+   npm run dev
+   ```
+
+4. **Access the application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8000
+   - API Documentation: http://localhost:8000/docs
