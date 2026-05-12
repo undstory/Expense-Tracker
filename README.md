@@ -61,7 +61,7 @@ npm install
 npm test -- --run
 ```
 
-## 🤖 AI-Assisted Development (GitHub Copilot)
+## AI-Assisted Development (GitHub Copilot)
 
 This project was developed with the active assistance of **GitHub Copilot** to speed up development and focus on architecture and business logic:
 
