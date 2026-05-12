@@ -80,7 +80,7 @@ This project was developed with the active assistance of **GitHub Copilot** to s
 
 ## API Documentation
 
-Interactive API documentation is available at: http://localhost:8000/docs (Swagger UI)
+Interactive API documentation is available at: https://expense-tracker-it7x.onrender.com/docs(Swagger UI)
 
 ## API Endpoints
 
