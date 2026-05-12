@@ -4,21 +4,19 @@
 
 Simple full-stack expense tracking app
 
-![main view of expense tracking app](image.png)
-
-![view of modal](image-1.png)
+**LIVE DEMO:** https://expense-tracker-kappa-black-65.vercel.app
 
 ## Tech stack
 
 - **FRONTEND:** React + Vite + TypeScript + SCSS
 - **BACKEND:** FastAPI (Python) + Pydantic
-- **DATABASE:** SQLite (file-based, no setup required)
+- **DATABASE:** SQLite (file-based, no setup required, MySQL eqrlier)
 - **TESTING:** pytest (backend) + Vitest (frontend)
 - **CI/CD & DevOps:** GitHub Actions
 
 ## Features
 
-- List all expenses
+- Modern dark color scheme with high contrast and accessibility
 - Add daily expenses
 - Delete expense
 - Client-side form validation:
@@ -35,7 +33,7 @@ Simple full-stack expense tracking app
 - Reset active filters
 - Success and error feedback alert
 - Basic Api Errors handling
-- ...
+- Tests
 
 ## Planned
 
@@ -80,7 +78,7 @@ This project was developed with the active assistance of **GitHub Copilot** to s
 
 ## API Documentation
 
-Interactive API documentation is available at: https://expense-tracker-it7x.onrender.com/docs(Swagger UI)
+Interactive API documentation is available at: [Swagger UI](https://expense-tracker-it7x.onrender.com/docs)
 
 ## API Endpoints
 

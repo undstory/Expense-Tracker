@@ -1,7 +1,7 @@
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(15, 23, 42, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -9,16 +9,18 @@
 }
 
 .modal-wrapper {
-    background-color: rgba(255, 255, 255);
-    color: #242424;
+     background-color: #1e293b;
+    color: #e2e8f0;
     padding: 32px;
-    border-radius: 8px;
+    border-radius: 16px;
     width: 460px;
     max-width: 90vw;
+    box-shadow: 0 22px 52px rgba(15, 23, 42, 0.3);
+    border: 1px solid rgba(148, 163, 184, 0.24);
 }
 
 .modal-header {
-    margin:0 0 16px;
+    margin: 0 0 16px;
 }
 
 .modal-buttons {
@@ -26,20 +28,23 @@
     gap: 16px;
     justify-content: center;
     margin-top: 24px;
-    :last-child {
-        background: rgba(0,0,0,0.7);
-    }
 }
 
 .modal-form input, .modal-form select {
-    padding: 8px;
-    margin: 12px;
+    padding: 10px;
+    margin: 12px 0;
+    background-color: #111827;
+    color: #e2e8f0;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 10px;
 }
 
 .modal-button {
-  background-color: #242424;
-   color: rgba(255, 255, 255);
-   min-width: 150px;
+    background-color: #2563eb;
+    color: #ffffff;
+    min-width: 150px;
+    border: none;
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.24);
 }
 
 .modal-form {
@@ -48,6 +53,6 @@
 }
 
 .modal-errormessage {
-    color: red;
+    color: #f87171;
     margin-top: 8px;
 }

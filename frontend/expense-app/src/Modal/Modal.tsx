@@ -146,7 +146,12 @@ const Modal = ({
             </>
           ) : null}
           <label htmlFor="Amount">Amount</label>
-          <input type="number" name="amount" onChange={handleCorrectAmount} />
+          <input
+            type="number"
+            step="0.01"
+            name="amount"
+            onChange={handleCorrectAmount}
+          />
           <label htmlFor="Date">Date</label>
           <input type="date" name="date" onChange={handleCorrectDate} />
           {errorMessage ? (

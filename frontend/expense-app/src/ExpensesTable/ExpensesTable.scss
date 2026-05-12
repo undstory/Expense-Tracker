@@ -1,31 +1,37 @@
 
-
 .expenses-table {
     width: 100%;
- border-collapse: collapse;
- border-radius: 8px;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #1e293b;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
 }
 
 .expenses-table th,
 .expenses-table td {
-    padding: 12px 16px;
+    padding: 14px 18px;
     text-align: center;
-    border-bottom: 1px solid rgba(36, 36, 36, 0.37);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.88);
+    color: #e2e8f0;
 }
 
 .expenses-table th {
-    font-weight: 600;
+    font-weight: 700;
+    background-color: #eff6ff;
+    color: #1e293b;
 }
 
-.expenses-table tr {
-    &:last-child td {
-        border-bottom: none;
-    }
+.expenses-table tr:last-child td {
+    border-bottom: none;
 }
 
 .table-removebtn {
-    background: rgba(0,0,0,0.5);
-   color: rgba(255, 255, 255);
-   min-width: 80px;
+    background: #ef4444;
+    color: #ffffff;
+    min-width: 80px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 10px 22px rgba(239, 68, 68, 0.16);
 }
 

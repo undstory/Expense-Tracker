@@ -1,32 +1,38 @@
 .popup-overlay {
     position: fixed;
     inset: 0;
+    background: rgba(15, 23, 42, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 1100;
 }
 
 .popup-wrapper {
-    background-color: #242424;
-    color: rgba(255, 255, 255);
-    padding: 32px;
-    border-radius: 8px;
-    width: 260px;
+    background-color: #1e293b;
+    color: #e2e8f0;
+    padding: 28px;
+    border-radius: 16px;
+    width: 320px;
     max-width: 90vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.32);
+    border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .popup-button {
-    color: #242424;
-    background-color: rgba(255, 255, 255);
+    color: #ffffff;
+    background-color: #2563eb;
     width: 150px;
     margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
 }
 
 .popup-header {
-    margin:8px 0px 0px;;
+    margin: 8px 0 0;
 }
