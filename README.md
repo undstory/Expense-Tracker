@@ -12,7 +12,7 @@ Simple full-stack expense tracking app
 
 - FRONTEND: React + Vite + TypeScript
 - BACKEND: FastAPI (Python)
-- Database: MySQL
+- Database: SQLite
 - CI/CD & DevOps: GitHub Actions
 
 ## Features

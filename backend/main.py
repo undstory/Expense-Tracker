@@ -63,7 +63,7 @@ def get_expenses():
 def create_expenses(expense: ExpenseCreate):
     db = get_connection()
     cursor = db.cursor()
-    query="""INSERT INTO expenses (title, category, amount, expense_date) VALUES (%s, %s, %s, %s)"""
+    query="""INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, ?, ?, ?)"""
     cursor.execute(
         query,
         (expense.title, expense.category, expense.amount, expense.expense_date)
@@ -78,7 +78,7 @@ def create_expenses(expense: ExpenseCreate):
 def remove_expense(id: int):
     db = get_connection()
     cursor = db.cursor()
-    query ="""DELETE FROM expenses WHERE ID=(%s)"""
+    query ="""DELETE FROM expenses WHERE ID=(?)"""
     cursor.execute(
         query,
         (id,)
