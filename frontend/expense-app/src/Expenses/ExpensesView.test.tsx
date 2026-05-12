@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ExpensesView from "../Expenses/ExpensesView";
+import ExpensesView from "./ExpensesView";
 import type { DataType } from "../types/expenses";
 
 describe("ExpensesView Component", () => {

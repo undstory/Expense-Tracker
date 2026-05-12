@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ExpensesTable from "../ExpensesTable/ExpensesTable";
+import ExpensesTable from "./ExpensesTable";
 import type { DataType } from "../types/expenses";
 
 describe("ExpensesTable Component", () => {
@@ -74,9 +74,7 @@ describe("ExpensesTable Component", () => {
 
   it("should call onRemove with correct id when delete button is clicked", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <ExpensesTable data={mockData} onRemove={mockOnRemove} />,
-    );
+    render(<ExpensesTable data={mockData} onRemove={mockOnRemove} />);
 
     const deleteButtons = screen.getAllByText("Delete");
     await user.click(deleteButtons[0]);
