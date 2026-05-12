@@ -5,6 +5,7 @@
 Simple full-stack expense tracking app
 
 **LIVE DEMO:** https://expense-tracker-kappa-black-65.vercel.app
+IMPORTANT NOTE: The backend is hosted on a free Render instance. It may take up to 2 minutes to load the initial data after a period of inactivity.
 
 ## Tech stack
 
