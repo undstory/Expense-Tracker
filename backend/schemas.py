@@ -12,7 +12,7 @@ class ExpenseCreate(BaseModel):
     def validate_date(cls, v: date):
         if(v.year < 2000):
             raise ValueError("Date must be later than year 2000")
-        if(v.year > date.today()):
+        if(v > date.today()):
             raise ValueError("Date cannot be in the future")
         return v
 

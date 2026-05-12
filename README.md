@@ -36,7 +36,32 @@ Simple full-stack expense tracking app
 ## Planned
 
 - Pagination
-- Tests
+
+## Testing
+
+_This project includes tests created with the help of a coding assistant._
+
+### Backend tests
+
+- Added pytest coverage for schema validation and FastAPI endpoints
+- Run:
+
+```bash
+cd backend
+pytest -v
+```
+
+### Frontend tests
+
+- Added Vitest coverage for utility functions and React components
+- `frontend/expense-app/vitest.config.ts` was updated for ES module support and to avoid plugin typing conflicts
+- Run:
+
+```bash
+cd frontend/expense-app
+npm install
+npm test -- --run
+```
 
 ## API Documentation
 
