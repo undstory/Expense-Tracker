@@ -2,11 +2,21 @@
 
 [![CI Pipeline](https://github.com/undstory/Expense-Tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/undstory/Expense-Tracker/actions/workflows/ci.yml)
 
-Simple full-stack expense tracking app
+Simple full-stack expense tracking app for desktop
 
 **LIVE DEMO:** https://expense-tracker-kappa-black-65.vercel.app
 
 IMPORTANT NOTE: The backend is hosted on a free Render instance. It may take up to 2 minutes to load the initial data after a period of inactivity.
+
+#### Author's Note / Why I built this
+
+This project was created primarily as a technical sandbox to practice and solidify my backend development skills (FastAPI, Python) and integrate them with a React frontend.
+
+A few things to keep in mind while reviewing this project:
+
+- **Focus on Architecture over Design:** The main goal wasn't to create a groundbreaking UI or complex business features, but to build a solid, working full-stack architecture with proper testing, CI/CD, and deployment.
+- **Desktop Experience:** This application was designed and optimized primarily for desktop screens.
+- **Self-Cleaning Database (Live Demo):** The backend uses a file-based SQLite database and is hosted on a free Render instance. Because Render uses an ephemeral filesystem, the database automatically resets itself after periods of inactivity. This actually creates a perfect "sandbox" environment – feel free to test the app and add dummy expenses, as the data will clean itself up shortly after you leave!
 
 ## Tech stack
 
